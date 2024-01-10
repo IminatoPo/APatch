@@ -65,7 +65,7 @@ jobs:
       - name: Build with Gradle
         run: |
           ls /usr/local/lib/android/sdk/build-tools/
-          exit 1
+          # exit 1
           echo 'org.gradle.parallel=true' >> gradle.properties
           echo 'org.gradle.vfs.watch=true' >> gradle.properties
           echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
@@ -88,13 +88,15 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Release apk
-        uses: ncipollo/release-action@v1.12.0
-        with:
-          token: ${{ github.token }}
-          tag: ${{ steps.parse_version.outputs.VERSION }}
-          artifacts: ${{steps.sign_app.outputs.signedReleaseFile}}
-          generateReleaseNotes: true
-          makeLatest: true
-          replacesArtifacts: true
+      # - name: Release apk
+      #   uses: ncipollo/release-action@v1.12.0
+      #   with:
+      #     token: ${{ github.token }}
+      #     tag: ${{ steps.parse_version.outputs.VERSION }}
+      #     artifacts: ${{steps.sign_app.outputs.signedReleaseFile}}
+      #     generateReleaseNotes: true
+      #     makeLatest: true
+      #     replacesArtifacts: true
