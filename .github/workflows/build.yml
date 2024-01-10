@@ -65,6 +65,7 @@ jobs:
       - name: Build with Gradle
         run: |
           ls /usr/local/lib/android/sdk/build-tools/
+          which zipalign
           # exit 1
           echo 'org.gradle.parallel=true' >> gradle.properties
           echo 'org.gradle.vfs.watch=true' >> gradle.properties
@@ -89,7 +90,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
-          BUILD_TOOLS_VERSION: "34.0.0"
+          BUILD_TOOLS_VERSION: ${{ shell 'dirname $(which zipalign)' }}
 
       # - name: Release apk
       #   uses: ncipollo/release-action@v1.12.0
