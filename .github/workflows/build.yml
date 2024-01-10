@@ -33,13 +33,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate version
-        id: parse_version
+      - name: Prepare variables
+        id: variables
         run: |
           COMMIT_NUM=$(git rev-list --count HEAD)
           VERSION=$(echo "$COMMIT_NUM + 200 + 10000" | bc)
+          BUILD_TOOLS_VERSION=$(which zipalign)
           echo "Generated Version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "BUILD_TOOLS_VERSION=$BUILD_TOOLS_VERSION" >> $GITHUB_OUTPUT
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -90,7 +92,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
-          BUILD_TOOLS_VERSION: ${{ shell 'dirname $(which zipalign)' }}
+          BUILD_TOOLS_VERSION: ${{ steps.variables.outputs.BUILD_TOOLS_VERSION }}
 
       # - name: Release apk
       #   uses: ncipollo/release-action@v1.12.0
